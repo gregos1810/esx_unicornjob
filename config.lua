@@ -5,19 +5,19 @@ Config.EnablePlayerManagement     = true
 Config.EnableSocietyOwnedVehicles = false
 Config.EnableVaultManagement      = true
 Config.EnableHelicopters          = false
-Config.EnableMoneyWash            = true
 Config.MaxInService               = -1
 Config.Locale                     = 'fr'
-
+Config.EnableMoneyWash            = false
+Config.EnableGrades               = false
 Config.MissCraft                  = 10 -- %
 
 
 Config.AuthorizedVehicles = {
-    { name = 'rentalbus',  label = 'Vanilla Unicorn Bus' },
+    { name = 'unicornbus',  label = 'Vanilla Unicorn Bus' },
 }
 
 Config.Blips = {
-    
+
     Blip = {
       Pos     = { x = 129.246, y = -1299.363, z = 29.501 },
       Sprite  = 121,
@@ -101,12 +101,12 @@ Config.Zones = {
         Color = { r = 238, g = 0, b = 0 },
         Type  = 23,
         Items = {
-            { name = 'jager',      label = _U('jager'),   price = 3 },
-            { name = 'vodka',      label = _U('vodka'),   price = 4 },
-            { name = 'rhum',       label = _U('rhum'),    price = 2 },
-            { name = 'whisky',     label = _U('whisky'),  price = 7 },
-            { name = 'tequila',    label = _U('tequila'), price = 2 },
-            { name = 'martini',    label = _U('martini'), price = 5 }
+            { name = 'jager',      label = 'Jägermeister',  price = 3 },
+            { name = 'vodka',      label = 'Vodka',         price = 4 },
+            { name = 'rhum',       label = 'Rhum',          price = 2 },
+            { name = 'whisky',     label = 'Whisky',        price = 7 },
+            { name = 'tequila',    label = 'Tequila',       price = 2 },
+            { name = 'martini',    label = 'Martini blanc', price = 5 }
         },
     },
 
@@ -116,12 +116,13 @@ Config.Zones = {
         Color = { r = 238, g = 110, b = 0 },
         Type  = 23,
         Items = {
-            { name = 'soda',        label = _U('soda'),     price = 4 },
-            { name = 'jusfruit',    label = _U('jusfruit'), price = 3 },
-            { name = 'icetea',      label = _U('icetea'),   price = 4 },
-            { name = 'energy',      label = _U('energy'),   price = 7 },
-            { name = 'drpepper',    label = _U('drpepper'), price = 2 },
-            { name = 'limonade',    label = _U('limonade'), price = 1 }
+            { name = 'soda',        label = 'Soda',         price = 4 },
+            { name = 'jusfruit',    label = 'Jus de fruits',price = 3 },
+            { name = 'icetea',      label = 'Ice Tea',      price = 4 },
+            { name = 'energy',      label = 'Energy Drink', price = 7 },
+            { name = 'drpepper',    label = 'Dr. Pepper',   price = 2 },
+            { name = 'limonade',    label = 'Limonade',     price = 1 },
+            { name = 'water',       label = 'eau',          price = 1 }
         },
     },
 
@@ -131,12 +132,14 @@ Config.Zones = {
         Color = { r = 142, g = 125, b = 76 },
         Type  = 23,
         Items = {
-            { name = 'bolcacahuetes',   label = _U('bolcacahuetes'),    price = 7 },
-            { name = 'bolnoixcajou',    label = _U('bolnoixcajou'),     price = 10 },
-            { name = 'bolpistache',     label = _U('bolpistache'),      price = 15 },
-            { name = 'bolchips',        label = _U('bolchips'),         price = 5 },
-            { name = 'saucisson',       label = _U('saucisson'),        price = 25 },
-            { name = 'grapperaisin',    label = _U('grapperaisin'),     price = 15 }
+            { name = 'bolcacahuetes',   label = 'Bol de cacahuètes',    price = 7 },
+            { name = 'bolnoixcajou',    label = 'Bol de noix de cajou', price = 10 },
+            { name = 'bolpistache',     label = 'Bol de pistache',      price = 15 },
+            { name = 'bolchips',        label = 'Bol de chips',         price = 5 },
+            { name = 'saucisson',       label = 'Saucisson',            price = 25 },
+            { name = 'grapperaisin',    label = 'Grappe de raisin',     price = 15 },
+            { name = 'bread',           label = 'pain',                 price = 2 }
+
         },
     },
 
@@ -146,8 +149,8 @@ Config.Zones = {
         Color = { r = 255, g = 255, b = 255 },
         Type  = 23,
         Items = {
-            { name = 'ice',     label = _U('ice'),      price = 1 },
-            { name = 'menthe',  label = _U('menthe'),   price = 2 }
+            { name = 'ice',     label = 'Glaçon',               price = 1 },
+            { name = 'menthe',  label = 'Feuille de menthe',    price = 2 }
         },
     },
 
@@ -163,7 +166,10 @@ Config.TeleportZones = {
     Size      = { x = 1.2, y = 1.2, z = 0.1 },
     Color     = { r = 128, g = 128, b = 128 },
     Marker    = 1,
-    Hint      = _U('e_to_enter_1'),
+    Blip      = false,
+    Name      = "Bar : entrée",
+    Type      = "teleport",
+    Hint      = "Appuyez sur ~INPUT_PICKUP~ pour passer derrière le bar.",
     Teleport  = { x = 126.742, y = -1278.386, z = 28.569 }
   },
 
@@ -172,7 +178,10 @@ Config.TeleportZones = {
     Size      = { x = 1.2, y = 1.2, z = 0.1 },
     Color     = { r = 128, g = 128, b = 128 },
     Marker    = 1,
-    Hint      = _U('e_to_exit_1'),
+    Blip      = false,
+    Name      = "Bar : sortie",
+    Type      = "teleport",
+    Hint      = "Appuyez sur ~INPUT_PICKUP~ pour passer devant le bar.",
     Teleport  = { x = 131.175, y = -1295.598, z = 28.569 },
   },
 
@@ -182,7 +191,10 @@ Config.TeleportZones = {
     Size      = { x = 2.0, y = 2.0, z = 0.2 },
     Color     = { r = 204, g = 204, b = 0 },
     Marker    = 1,
-    Hint      = _U('e_to_enter_2),
+    Blip      = false,
+    Name      = "Héliport : entrée",
+    Type      = "teleport",
+    Hint      = "Appuyez sur ~INPUT_PICKUP~ pour monter sur le toit.",
     Teleport  = { x = -65.944, y = -818.589, z =  320.801 }
   },
 
@@ -191,8 +203,125 @@ Config.TeleportZones = {
     Size      = { x = 2.0, y = 2.0, z = 0.2 },
     Color     = { r = 204, g = 204, b = 0 },
     Marker    = 1,
-    Hint      = _U('e_to_exit_2'),
+    Blip      = false,
+    Name      = "Héliport : sortie",
+    Type      = "teleport",
+    Hint      = "Appuyez sur ~INPUT_PICKUP~ pour descendre dans les bureaux.",
     Teleport  = { x = 124.164, y = -728.231, z = 241.801 },
   },
 ]]--
+
+}
+
+-----------------------
+--- Items Crafting ---
+Config.craft = {
+  jagerbomb={
+    items={
+      {name='energy',qte=2},
+      {name='jager',qte=2},
+    },
+    status={hunger=0,thirst=30000,drunk=30000},
+  },
+  golem={
+    items={
+      {name='ice',qte=1},
+      {name='vodka',qte=2},
+      {name='limonade',qte=2},
+    },
+    status={hunger=0,thirst=30000,drunk=30000},
+  },
+  whiskycoca={
+    items={
+      {name='whisky',qte=2},
+      {name='soda',qte=2},
+    },
+    status={hunger=0,thirst=30000,drunk=30000},
+  },
+  rhumcoca={
+    items={
+      {name='rhum',qte=2},
+      {name='soda',qte=2},
+    },
+    status={hunger=0,thirst=30000,drunk=30000},
+  },
+  vodkaenergy={
+    items={
+      {name='ice',qte=1},
+      {name='vodka',qte=2},
+      {name='energy',qte=2},
+    },
+    status={hunger=0,thirst=30000,drunk=30000},
+  },
+  vodkafruit={
+    items={
+      {name='ice',qte=1},
+      {name='vodka',qte=2},
+      {name='jusfruit',qte=2},
+    },
+    status={hunger=0,thirst=30000,drunk=30000},
+  },
+  rhumfruit={
+    items={
+      {name='ice',qte=1},
+      {name='rhum',qte=2},
+      {name='jusfruit',qte=2},
+    },
+    status={hunger=0,thirst=30000,drunk=30000},
+  },
+  teqpaf={
+    items={
+      {name='limonade',qte=2},
+      {name='tequila',qte=2},
+    },
+    status={hunger=0,thirst=30000,drunk=30000},
+  },
+  rhumfruit={
+    items={
+      {name='ice',qte=1},
+      {name='rhum',qte=2},
+      {name='limonade',qte=2},
+      {name='menthe',qte=2},
+    },
+    status={hunger=0,thirst=30000,drunk=30000},
+  },
+  mixapero={
+    items={
+      {name='bolcacahuetes',qte=2},
+      {name='bolnoixcajou',qte=2},
+      {name='bolpistache',qte=2},
+      {name='bolchips',qte=2},
+    },
+    status={hunger=20000,thirst=0,drunk=30000},
+  },
+  metreshooter={
+    items={
+      {name='jager',qte=2},
+      {name='vodka',qte=2},
+      {name='whisky',qte=2},
+      {name='tequila',qte=2},
+    },
+    status={hunger=0,thirst=30000,drunk=30000},
+  },
+  s_poulet={
+    items={
+      {name='bread',qte=1},
+      {name='packaged_chicken',qte=1},
+    },
+    status={hunger=50000,thirst=50000,drunk=0},
+  },
+  s_thon={
+    items={
+      {name='bread',qte=1},
+      {name='fish',qte=1},
+    },
+    status={hunger=50000,thirst=50000,drunk=0},
+  },
+  kebab={
+    items={
+      {name='bread',qte=1},
+      {name='viande',qte=1},
+    },
+    status={hunger=70000,thirst=70000,drunk=0},
+  },
 }

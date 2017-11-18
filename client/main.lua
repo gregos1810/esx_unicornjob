@@ -123,13 +123,14 @@ function OpenCloakroomMenu()
             ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
               local playerPed = GetPlayerPed(-1)
               if skin.sex == 0 then
-                SetPedComponentVariation(playerPed, 8, 15, 0, 0) --T-shirt
+                SetPedComponentVariation(playerPed, 8, 22, 0, 0) --T-shirt
                 SetPedComponentVariation(playerPed, 11, 40, 0, 0) --Torse
                 SetPedComponentVariation(playerPed, 10, 0, 0, 0) --Decals
-                SetPedComponentVariation(playerPed, 3, 5, 0, 0) --Bras
-                SetPedComponentVariation(playerPed, 4, 61, 6, 0) --Pantalon
-                SetPedComponentVariation(playerPed, 6, 37, 0, 0) --Chaussures
-                SetPedComponentVariation(playerPed, 7, 11, 2, 0) --Collier
+                SetPedComponentVariation(playerPed, 3, 4, 0, 0) --Bras
+                SetPedComponentVariation(playerPed, 4, 26, 0, 0) --Pantalon
+                SetPedComponentVariation(playerPed, 6, 10, 0, 0) --Chaussures
+                SetPedComponentVariation(playerPed, 7, 0, 0, 0) --Collier
+                SetPedPropIndex(GetPlayerPed(-1), 0, 12, 1, 1)
 
                 ClearPedBloodDamage(playerPed)
                 ResetPedVisibleDamage(playerPed)
@@ -429,7 +430,7 @@ function OpenVaultMenu()
       {label = _U('get_object'), value = 'get_stock'},
       {label = _U('put_object'), value = 'put_stock'}
     }
-    
+
 
     ESX.UI.Menu.CloseAll()
 
@@ -459,7 +460,7 @@ function OpenVaultMenu()
         end
 
       end,
-      
+
       function(data, menu)
 
         menu.close()
@@ -480,7 +481,7 @@ function OpenFridgeMenu()
       {label = _U('get_object'), value = 'get_stock'},
       {label = _U('put_object'), value = 'put_stock'}
     }
-    
+
 
     ESX.UI.Menu.CloseAll()
 
@@ -502,7 +503,7 @@ function OpenFridgeMenu()
         end
 
       end,
-      
+
       function(data, menu)
 
         menu.close()
@@ -548,7 +549,7 @@ function OpenVehicleSpawnerMenu()
               ESX.Game.SetVehicleProperties(vehicle, vehicleProps)
               local playerPed = GetPlayerPed(-1)
               --TaskWarpPedIntoVehicle(playerPed,  vehicle,  -1)  -- teleport into vehicle
-          end)            
+          end)
 
           TriggerServerEvent('esx_society:removeVehicleFromGarage', 'unicorn', vehicleProps)
 
@@ -657,6 +658,7 @@ function OpenSocietyActionsMenu()
   table.insert(elements, {label = _U('billing'),    value = 'billing'})
   if (isBarman or IsGradeBoss()) then
     table.insert(elements, {label = _U('crafting'),    value = 'menu_crafting'})
+    table.insert(elements, {label = 'sandwich',    value = 'menu_sandwich'})
   end
 
   ESX.UI.Menu.CloseAll()
@@ -674,8 +676,32 @@ function OpenSocietyActionsMenu()
         OpenBillingMenu()
       end
 
+      if data.current.value == 'menu_sandwich' then
+        ESX.UI.Menu.Open(
+              'default', GetCurrentResourceName(), 'menu_crafting',
+              {
+                  title = _U('crafting'),
+                  align = 'top-left',
+                  elements = {
+                      {label = 'sandwich au thon',  value = 's_thon'},
+                      {label = 'sandwich au poulet',value = 's_poulet'},
+                      {label = 'kebab',             value = 'kebab'},
+                  }
+              },
+              function(data2, menu2)
+
+                TriggerServerEvent('esx_unicornjob:crafting', data2.current.value,{ lib = "timetable@floyd@clean_kitchen@base", anim = "base" })                
+              end,
+              function(data2, menu2)
+                  menu2.close()
+              end
+          )
+
+
+      end
+
       if data.current.value == 'menu_crafting' then
-        
+
           ESX.UI.Menu.Open(
               'default', GetCurrentResourceName(), 'menu_crafting',
               {
@@ -697,17 +723,16 @@ function OpenSocietyActionsMenu()
                   }
               },
               function(data2, menu2)
-            
-                TriggerServerEvent('esx_unicornjob:craftingCoktails', data2.current.value)
-                animsAction({ lib = "mini@drinking", anim = "shots_barman_b" })
-      
+
+                TriggerServerEvent('esx_unicornjob:crafting', data2.current.value,{ lib = "mini@drinking", anim = "shots_barman_b" })
+               
               end,
               function(data2, menu2)
                   menu2.close()
               end
           )
       end
-     
+
     end,
     function(data, menu)
 
@@ -726,7 +751,7 @@ function OpenBillingMenu()
       title = _U('billing_amount')
     },
     function(data, menu)
-    
+
       local amount = tonumber(data.value)
       local player, distance = ESX.Game.GetClosestPlayer()
 
@@ -1099,48 +1124,48 @@ function OpenShopMenu(zone)
 
 end
 
+RegisterNetEvent('esx_unicornjob:animsAction')
+AddEventHandler('esx_unicornjob:animsAction', function(animObj)
 
-function animsAction(animObj)
-    Citizen.CreateThread(function()
-        if not playAnim then
-            local playerPed = GetPlayerPed(-1);
-            if DoesEntityExist(playerPed) then -- Check if ped exist
-                dataAnim = animObj
+    if not playAnim then
+        local playerPed = GetPlayerPed(-1);
+        if DoesEntityExist(playerPed) then -- Check if ped exist
+            dataAnim = animObj
 
-                -- Play Animation
-                RequestAnimDict(dataAnim.lib)
-                while not HasAnimDictLoaded(dataAnim.lib) do
-                    Citizen.Wait(0)
-                end
-                if HasAnimDictLoaded(dataAnim.lib) then
-                    local flag = 0
-                    if dataAnim.loop ~= nil and dataAnim.loop then
-                        flag = 1
-                    elseif dataAnim.move ~= nil and dataAnim.move then
-                        flag = 49
-                    end
-
-                    TaskPlayAnim(playerPed, dataAnim.lib, dataAnim.anim, 8.0, -8.0, -1, flag, 0, 0, 0, 0)
-                    playAnimation = true
+            -- Play Animation
+            RequestAnimDict(dataAnim.lib)
+            while not HasAnimDictLoaded(dataAnim.lib) do
+                Citizen.Wait(0)
+            end
+            if HasAnimDictLoaded(dataAnim.lib) then
+                local flag = 0
+                if dataAnim.loop ~= nil and dataAnim.loop then
+                    flag = 1
+                elseif dataAnim.move ~= nil and dataAnim.move then
+                    flag = 49
                 end
 
-                -- Wait end animation
-                while true do
-                    Citizen.Wait(0)
-                    if not IsEntityPlayingAnim(playerPed, dataAnim.lib, dataAnim.anim, 3) then
-                        playAnim = false
-                        TriggerEvent('ft_animation:ClFinish')
-                        break
-                    end
+                TaskPlayAnim(playerPed, dataAnim.lib, dataAnim.anim, 8.0, -8.0, -1, flag, 0, 0, 0, 0)
+                playAnimation = true
+            end
+
+            -- Wait end animation
+            while true do
+                Citizen.Wait(0)
+                if not IsEntityPlayingAnim(playerPed, dataAnim.lib, dataAnim.anim, 3) then
+                    playAnim = false
+                    TriggerEvent('ft_animation:ClFinish')
+                    break
                 end
-            end -- end ped exist
-        end
-    end)
-end
+            end
+        end -- end ped exist
+    end
+  
+end)
 
 
 AddEventHandler('esx_unicornjob:hasEnteredMarker', function(zone)
- 
+
     if zone == 'BossActions' and IsGradeBoss() then
       CurrentAction     = 'menu_boss_actions'
       CurrentActionMsg  = _U('open_bossmenu')
@@ -1172,7 +1197,7 @@ AddEventHandler('esx_unicornjob:hasEnteredMarker', function(zone)
       CurrentActionMsg  = _U('shop_menu')
       CurrentActionData = {zone = zone}
     end
-    
+
     if zone == 'Vehicles' then
         CurrentAction     = 'menu_vehicle_spawner'
         CurrentActionMsg  = _U('vehicle_spawner')
@@ -1352,7 +1377,7 @@ Citizen.CreateThread(function()
         if CurrentAction == 'menu_shop' then
             OpenShopMenu(CurrentActionData.zone)
         end
-        
+
         if CurrentAction == 'menu_vehicle_spawner' then
             OpenVehicleSpawnerMenu()
         end
@@ -1367,7 +1392,7 @@ Citizen.CreateThread(function()
           else
 
             if
-              GetEntityModel(vehicle) == GetHashKey('rentalbus')
+              GetEntityModel(vehicle) == GetHashKey('burrito3')
             then
               TriggerServerEvent('esx_service:disableService', 'unicorn')
             end
@@ -1381,7 +1406,8 @@ Citizen.CreateThread(function()
         if CurrentAction == 'menu_boss_actions' and IsGradeBoss() then
 
           local options = {
-            wash      = Config.EnableMoneyWash,
+           wash       = Config.EnableMoneyWash,
+           grades     = Config.EnableGrades,
           }
 
           ESX.UI.Menu.CloseAll()
@@ -1397,7 +1423,7 @@ Citizen.CreateThread(function()
 
         end
 
-        
+
         CurrentAction = nil
 
       end
@@ -1492,3 +1518,20 @@ Citizen.CreateThread(function()
 end)
 
 -----------------------
+
+
+---------------------------------------------------------------------------------------------------------
+--NB : gestion des menu
+---------------------------------------------------------------------------------------------------------
+
+RegisterNetEvent('NB:openMenuUnicorn')
+AddEventHandler('NB:openMenuUnicorn', function()
+    OpenSocietyActionsMenu()
+end)
+
+RegisterNetEvent('NB:openMenuUnicorn')
+AddEventHandler('NB:openMenuUnicorn', function()
+    if ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'citizen_interaction') then
+        ESX.UI.Menu.Close('default', GetCurrentResourceName(), 'citizen_interaction')
+    end
+end)
